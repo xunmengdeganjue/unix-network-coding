@@ -1,0 +1,31 @@
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/Make.defines.in unpv12e/Make.defines.in
+--- unpv12e.orig/Make.defines.in	Thu Jun 12 13:20:21 1997
++++ unpv12e/Make.defines.in	Fri Aug 17 16:28:09 2001
+@@ -38,4 +38,5 @@
+ LIBXTI_OBJS = @LIBXTI_OBJS@
+ 
+ CLEANFILES = core core.* *.core *.o temp.* *.out typescript* \
+-		*.lc *.lh *.bsdi *.sparc *.uw
++		*.lc *.lh *.bsdi *.sparc *.uw \
++		@LIBUNPXTI_NAME@ @LIBUNP_NAME@
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/Makefile.in unpv12e/Makefile.in
+--- unpv12e.orig/Makefile.in	Fri Apr 11 15:42:26 1997
++++ unpv12e/Makefile.in	Fri Aug 17 16:25:19 2001
+@@ -4,8 +4,16 @@
+ 	@echo "Nothing to make in this directory"
+ 	@echo "Please read the README file"
+ 
++DIRS = \
++	advio bcast debug i386-pc-bsdi3.0 icmpd inetd intro ioctl ipopts \
++	lib libfree libgai libroute libxti mcast mysdr names nonblock oob ping \
++	route rtt select server sigio sntp sock sockopt ssntp streams tcpcliserv \
++	test threads traceroute udpcksum udpcliserv unixdomain xtiintro xtioob xtiopt xtiserver xtiudp
++
+ clean:
++	for dir in $(DIRS); do cd $$dir; make clean; cd ..; done
+ 	rm -f $(CLEANFILES)
+  
+ distclean:
+-	rm -f $(CLEANFILES) config.cache config.log config.status
++	for dir in $(DIRS); do cd $$dir; make clean; cd ..; done
++	rm -f $(CLEANFILES) config.cache config.log config.status config.h Make.defines Makefile

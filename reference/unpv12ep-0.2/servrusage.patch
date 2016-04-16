@@ -1,0 +1,402 @@
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/Makefile unpv12e/server/Makefile
+--- unpv12e.orig/server/Makefile	Sun Jul  6 11:13:18 1997
++++ unpv12e/server/Makefile	Sun Aug 19 22:10:10 2001
+@@ -6,80 +6,87 @@
+ all:	${PROGS}
+ 
+ # The client to test the various servers.
+-client:	client.o pr_cpu_time.o
+-		${CC} ${CFLAGS} -o $@ client.o pr_cpu_time.o ${LIBS}
++client:	client.o getrusage_children.o pr_cpu_time.o
++		${CC} ${CFLAGS} -o $@ client.o getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # A special client that sends an RST occasionally.
+ # Used to test the XTI server (should receive disconnect).
+-clientrst:	clientrst.o pr_cpu_time.o
+-		${CC} ${CFLAGS} -o $@ clientrst.o pr_cpu_time.o ${LIBS}
++clientrst:	clientrst.o getrusage_children.o pr_cpu_time.o
++		${CC} ${CFLAGS} -o $@ clientrst.o getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv00: traditional concurrent server: use as base level
+-serv00:	serv00.o web_child.o pr_cpu_time.o
+-		${CC} ${CFLAGS} -o $@ serv00.o web_child.o pr_cpu_time.o ${LIBS}
++serv00:	serv00.o web_child.o getrusage_children.o pr_cpu_time.o
++		${CC} ${CFLAGS} -o $@ serv00.o web_child.o getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv01: one fork per client (traditional concurrent server).
+-serv01:	serv01.o web_child.o sig_chld_waitpid.o pr_cpu_time.o
++serv01:	serv01.o web_child.o sig_chld_waitpid.o getrusage_children.o pr_cpu_time.o
+ 		${CC} ${CFLAGS} -o $@ serv01.o web_child.o sig_chld_waitpid.o \
+-			pr_cpu_time.o ${LIBS}
++			getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv02: prefork, no locking; works on BSD-derived systems
+ #	but not on SVR4-derived systems.
+-serv02:	serv02.o child02.o web_child.o pr_cpu_time.o
+-		${CC} ${CFLAGS} -o $@ serv02.o child02.o web_child.o pr_cpu_time.o ${LIBS}
++serv02:	serv02.o child02.o web_child.o getrusage_children.o pr_cpu_time.o
++		${CC} ${CFLAGS} -o $@ serv02.o child02.o web_child.o getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv02l: prefork, no locking, block in select instead of accept to see
+ #	select collisions; works on BSD-derived systems but not on SVR4.
+-serv02l:serv02.o child02l.o web_child.o pr_cpu_time.o
++serv02l:serv02.o child02l.o web_child.o getrusage_children.o pr_cpu_time.o
+ 		${CC} ${CFLAGS} -o serv02l serv02.o child02l.o web_child.o \
+-			pr_cpu_time.o ${LIBS}
++			getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv02m: prefork, no locking; works on BSD-derived systems.
+ #	This version is "metered" to see #clients/child serviced.
+-serv02m:serv02m.o child02m.o web_child.o pr_cpu_time.o meter.o
++serv02m:serv02m.o child02m.o web_child.o getrusage_children.o pr_cpu_time.o meter.o
+ 		${CC} ${CFLAGS} -o serv02m serv02m.o child02m.o web_child.o \
+-			pr_cpu_time.o meter.o ${LIBS}
++			getrusage_children.o pr_cpu_time.o meter.o ${LIBS}
+ 
+ # serv03: prefork, file locking using fcntl().  Similar to Apache server.
+-serv03:	serv03.o child03.o lock_fcntl.o web_child.o pr_cpu_time.o
++serv03:	serv03.o child03.o lock_fcntl.o web_child.o getrusage_children.o pr_cpu_time.o
+ 		${CC} ${CFLAGS} -o $@ serv03.o child03.o lock_fcntl.o web_child.o \
+-			pr_cpu_time.o ${LIBS}
++			getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv03m: prefork, file locking using fcntl(), metered.
+-serv03m:	serv03m.o child03m.o lock_fcntl.o web_child.o pr_cpu_time.o meter.o
++serv03m:	serv03m.o child03m.o lock_fcntl.o web_child.o getrusage_children.o pr_cpu_time.o meter.o
+ 		${CC} ${CFLAGS} -o $@ serv03m.o child03m.o lock_fcntl.o web_child.o \
+-			pr_cpu_time.o meter.o ${LIBS}
++			getrusage_children.o pr_cpu_time.o meter.o ${LIBS}
+ 
+ # serv04: prefork, file locking using pthread locking.
+-serv04:	serv04.o child04.o lock_pthread.o web_child.o pr_cpu_time.o
++serv04:	serv04.o child04.o lock_pthread.o web_child.o getrusage_children.o pr_cpu_time.o
+ 		${CC} ${CFLAGS} -o $@ serv04.o child04.o lock_pthread.o \
+-			web_child.o pr_cpu_time.o ${LIBS}
++			web_child.o getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # serv05: prefork, descrptor passing to children.  Similar to NSCA server.
+-serv05:	serv05.o child05.o lock_fcntl.o web_child.o pr_cpu_time.o
++serv05:	serv05.o child05.o lock_fcntl.o web_child.o getrusage_children.o pr_cpu_time.o
+ 		${CC} ${CFLAGS} -o $@ serv05.o child05.o lock_fcntl.o web_child.o \
+-			pr_cpu_time.o ${LIBS}
++			getrusage_children.o pr_cpu_time.o ${LIBS}
+ 
+ # Thread versions must call a reentrant version of readline().
+ # serv06: one thread per client.
+-serv06:	serv06.o web_child.o pr_cpu_time.o readline.o
+-		${CC} ${CFLAGS} -o $@ serv06.o web_child.o pr_cpu_time.o \
++serv06:	serv06.o web_child.o getrusage_children.o pr_cpu_time.o readline.o
++		${CC} ${CFLAGS} -o $@ serv06.o web_child.o getrusage_children.o pr_cpu_time.o \
+ 			readline.o ${LIBS}
+ 
+ # serv07: prethread with mutex locking around accept().
+-serv07:	serv07.o pthread07.o web_child.o pr_cpu_time.o readline.o
+-		${CC} ${CFLAGS} -o $@ serv07.o pthread07.o web_child.o pr_cpu_time.o \
++serv07:	serv07.o pthread07.o web_child.o getrusage_children.o pr_cpu_time.o readline.o
++		${CC} ${CFLAGS} -o $@ serv07.o pthread07.o web_child.o getrusage_children.o pr_cpu_time.o \
+ 			readline.o ${LIBS}
+ 
+ # serv08: prethread with only main thread doing accept().
+-serv08:	serv08.o pthread08.o web_child.o pr_cpu_time.o readline.o
+-		${CC} ${CFLAGS} -o $@ serv08.o pthread08.o web_child.o pr_cpu_time.o \
++serv08:	serv08.o pthread08.o web_child.o getrusage_children.o pr_cpu_time.o readline.o
++		${CC} ${CFLAGS} -o $@ serv08.o pthread08.o web_child.o getrusage_children.o pr_cpu_time.o \
+ 			readline.o ${LIBS}
+ 
+ # serv09: prethread with no locking around accept().
+-serv09:	serv09.o pthread09.o web_child.o pr_cpu_time.o readline.o
+-		${CC} ${CFLAGS} -o $@ serv09.o pthread09.o web_child.o pr_cpu_time.o \
++serv09:	serv09.o pthread09.o web_child.o getrusage_children.o pr_cpu_time.o readline.o
++		${CC} ${CFLAGS} -o $@ serv09.o pthread09.o web_child.o getrusage_children.o pr_cpu_time.o \
+ 			readline.o ${LIBS}
++
++getrusage_children.o: getrusage_children.c
++	${CC} ${CFLAGS} -c getrusage_children.c
++
++# unit test
++getrusage_children_test:
++	${CC} getrusage_children_test.c getrusage_children.c ../libunp.a -lm -pthread -o getrusage_children_test
+ 
+ clean:
+ 		rm -f ${PROGS} ${CLEANFILES}
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/getrusage_children.c unpv12e/server/getrusage_children.c
+--- unpv12e.orig/server/getrusage_children.c	Wed Dec 31 16:00:00 1969
++++ unpv12e/server/getrusage_children.c	Wed Aug 22 10:34:21 2001
+@@ -0,0 +1,104 @@
++#include <ctype.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <math.h>
++#include <pthread.h>
++#include <stdio.h>
++#include <string.h>
++#include <sys/times.h>
++#include <sys/types.h>
++#include <unistd.h>       
++
++#include "getrusage_children.h"
++
++/* Skip to char after nth whitespace.  Returns NULL on failure. */
++static const char *skipNspace(const char *p, int n)
++{
++	while (*++p)
++		if (isspace(*p) && ! --n) 
++			return p+1;
++	return NULL;
++}
++
++/* Linuxthreads (as of linux 2.4.2, anyway) doesn't
++ * account for child threads' execution time.  Have to
++ * simulate it by pawing through /proc.
++ *
++ * The following truly horrible interface made it easier to
++ * retrofit the original code for Linux.
++ * Each thread puts its own pid into getrusage_threadpids.
++ * getrusage_children scans that array upwards until it finds a zero pid.
++ */
++int getrusage_children(struct rusage *buf)
++{
++    int i;
++    int nread;
++
++#ifndef __linux__
++	i = getrusage(RUSAGE_CHILDREN, buf);
++	if (i)
++		return errno;
++
++#else
++	double hertz;
++
++	if (getrusage_threadpids[0] == 0) {
++		/* Fall back on old code if threads not in use */
++		return getrusage(RUSAGE_CHILDREN, buf);
++	}
++
++	memset(buf, 0, sizeof(*buf));
++
++	hertz = sysconf(_SC_CLK_TCK);
++    for (i = 0; getrusage_threadpids[i] && i < MYMAXTHREADS; i++) {
++        char scratch[1024];     // FIXME: is that big enough?
++        int fd;
++        const char *p;
++		double secs;
++
++		// Under LinuxThreads, each thread has its own pid
++		sprintf(scratch, "/proc/%d/stat", (int) getrusage_threadpids[i]);
++		fd = open(scratch, O_RDONLY);
++		if (fd == -1)
++			return errno;
++
++        // rewind to start of stat file.  (Not all /proc entries support this.)
++        if (lseek(fd, 0, SEEK_SET)) {
++			close(fd);
++            return EBADF;
++		}
++
++        // Read in ASCII data and parse out utime and stime fields
++        // (see 'man proc')
++        nread = read(fd, scratch, sizeof(scratch) - 1);
++		close(fd);
++        if (nread < 50)         // FIXME: cheesy
++            return EINVAL;
++        scratch[nread] = 0;
++
++        // Skip to end of command field
++        // FIXME: what if executable has ) in its filename?  Bleh.
++        p = strchr(scratch, ')') + 2;
++
++        // Skip to utime field
++        p = skipNspace(p, 11);
++        if (!p)
++            return EINVAL;
++        secs = atoi(p) / hertz;
++        buf->ru_utime.tv_sec += floor(secs);
++		secs -= floor(secs);
++        buf->ru_utime.tv_usec += (int)(secs * 1000000.0);
++
++        // Skip to stime field
++        p = skipNspace(p, 1);
++        if (!p)
++            return EINVAL;
++        secs = atoi(p) / hertz;
++        buf->ru_stime.tv_sec += floor(secs);
++		secs -= floor(secs);
++        buf->ru_stime.tv_usec += (int)(secs * 1000000.0);
++    }
++#endif
++
++	return 0;
++}
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/getrusage_children.h unpv12e/server/getrusage_children.h
+--- unpv12e.orig/server/getrusage_children.h	Wed Dec 31 16:00:00 1969
++++ unpv12e/server/getrusage_children.h	Wed Aug 22 10:20:53 2001
+@@ -0,0 +1,23 @@
++#ifndef RUSAGE_CHILDREN_H
++#define RUSAGE_CHILDREN_H
++
++#include <sys/resource.h>
++#include <sys/time.h>
++#include <unistd.h>  
++
++/* Linuxthreads (as of linux 2.4.2, anyway) doesn't
++ * account for child threads' execution time.  Have to
++ * simulate it by pawing through /proc.
++ *
++ * The following truly horrible interface made it easier to
++ * retrofit the original code for Linux.
++ * Each thread puts its own pid into getrusage_threadpids.
++ * getrusage_children scans that array upwards until it finds a zero pid.
++ */
++
++#define MYMAXTHREADS 64
++pid_t getrusage_threadpids[MYMAXTHREADS];
++
++int getrusage_children(struct rusage *buf);
++
++#endif
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/getrusage_children_test.c unpv12e/server/getrusage_children_test.c
+--- unpv12e.orig/server/getrusage_children_test.c	Wed Dec 31 16:00:00 1969
++++ unpv12e/server/getrusage_children_test.c	Wed Aug 22 10:20:53 2001
+@@ -0,0 +1,55 @@
++#include <pthread.h>
++#include <stdlib.h>
++#include <stdio.h>
++
++#include "getrusage_children.h"
++
++#define DIEIF(err) if (err) { printf("failed in file %s, line %d, val %d\n", __FILE__, __LINE__, err); exit(1); }
++
++void *
++thread_main(void *arg)
++{
++	/* burn some time */
++	time_t foo;
++	int i = (int) arg;
++	getrusage_threadpids[i] = getpid();
++	foo = time(0) + 4;
++	while (time(0) != foo) {
++		int i;
++		char *p;
++		p = malloc(1000);
++		for (i=0; i<100; i++) {
++			memset(p, 0, 1000);
++			p[0] += p[1];
++			memmove(p, p+1, 1000-1);
++		}
++		free(p);
++	}
++	pause();
++}
++
++main()
++{
++	struct rusage buf;
++	int err;
++	pthread_t threads[10];
++	
++	err = getrusage_children(&buf);
++	DIEIF(err);
++	DIEIF(buf.ru_utime.tv_sec > 0);
++	DIEIF(buf.ru_stime.tv_sec > 0);
++
++	Pthread_create(&threads[0], NULL, &thread_main, 0);
++	sleep(3);
++
++	err = getrusage_children(&buf);
++	DIEIF(err);
++	/*printf("ru_utime.tv_sec %d, tv_usec %d\n", buf.ru_utime.tv_sec, buf.ru_utime.tv_usec);
++	  printf("ru_stime.tv_sec %d, tv_usec %d\n", buf.ru_stime.tv_sec, buf.ru_stime.tv_usec);
++	 */
++	DIEIF(buf.ru_utime.tv_sec < 2);
++	DIEIF(buf.ru_stime.tv_sec > 0);
++
++	printf("ok\n");
++	exit(0);
++}
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pr_cpu_time.c unpv12e/server/pr_cpu_time.c
+--- unpv12e.orig/server/pr_cpu_time.c	Sun Jul 27 07:54:32 1997
++++ unpv12e/server/pr_cpu_time.c	Wed Aug 22 10:20:53 2001
+@@ -1,4 +1,5 @@
+ #include	"unp.h"
++#include	"getrusage_children.h"
+ #include	<sys/resource.h>
+ 
+ #ifndef	HAVE_GETRUSAGE_PROTO
+@@ -13,7 +14,7 @@
+ 
+ 	if (getrusage(RUSAGE_SELF, &myusage) < 0)
+ 		err_sys("getrusage error");
+-	if (getrusage(RUSAGE_CHILDREN, &childusage) < 0)
++	if (getrusage_children(&childusage) < 0)
+ 		err_sys("getrusage error");
+ 
+ 	user = (double) myusage.ru_utime.tv_sec +
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pthread07.c unpv12e/server/pthread07.c
+--- unpv12e.orig/server/pthread07.c	Fri Jul  4 14:14:10 1997
++++ unpv12e/server/pthread07.c	Wed Aug 22 10:21:30 2001
+@@ -21,6 +21,10 @@
+ 	cliaddr = Malloc(addrlen);
+ 
+ 	printf("thread %d starting\n", (int) arg);
++#ifdef __linux__
++	getrusage_threadpids[0] = getppid();
++	getrusage_threadpids[1+(int) arg] = getpid();
++#endif
+ 	for ( ; ; ) {
+ 		clilen = addrlen;
+     	Pthread_mutex_lock(&mlock);
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pthread07.h unpv12e/server/pthread07.h
+--- unpv12e.orig/server/pthread07.h	Fri Jul  4 14:11:09 1997
++++ unpv12e/server/pthread07.h	Wed Aug 22 10:20:53 2001
+@@ -7,3 +7,5 @@
+ int				listenfd, nthreads;
+ socklen_t		addrlen;
+ pthread_mutex_t	mlock;
++
++#include "getrusage_children.h"
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pthread08.c unpv12e/server/pthread08.c
+--- unpv12e.orig/server/pthread08.c	Sat Jul  5 11:47:23 1997
++++ unpv12e/server/pthread08.c	Wed Aug 22 10:21:34 2001
+@@ -17,6 +17,10 @@
+ 	void	web_child(int);
+ 
+ 	printf("thread %d starting\n", (int) arg);
++#ifdef __linux__
++	getrusage_threadpids[0] = getppid();
++	getrusage_threadpids[1+(int) arg] = getpid();
++#endif
+ 	for ( ; ; ) {
+     	Pthread_mutex_lock(&clifd_mutex);
+ 		while (iget == iput)
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pthread08.h unpv12e/server/pthread08.h
+--- unpv12e.orig/server/pthread08.h	Sat Jul  5 11:47:27 1997
++++ unpv12e/server/pthread08.h	Wed Aug 22 10:20:53 2001
+@@ -8,3 +8,5 @@
+ int					clifd[MAXNCLI], iget, iput;
+ pthread_mutex_t		clifd_mutex;
+ pthread_cond_t		clifd_cond;
++
++#include "getrusage_children.h"
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pthread09.c unpv12e/server/pthread09.c
+--- unpv12e.orig/server/pthread09.c	Sat Jul  5 11:21:59 1997
++++ unpv12e/server/pthread09.c	Wed Aug 22 10:21:41 2001
+@@ -21,6 +21,10 @@
+ 	cliaddr = Malloc(addrlen);
+ 
+ 	printf("thread %d starting\n", (int) arg);
++#ifdef __linux__
++	getrusage_threadpids[0] = getppid();
++	getrusage_threadpids[1+(int) arg] = getpid();
++#endif
+ 	for ( ; ; ) {
+ 		clilen = addrlen;
+ 		connfd = Accept(listenfd, cliaddr, &clilen);
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/pthread09.h unpv12e/server/pthread09.h
+--- unpv12e.orig/server/pthread09.h	Sat Jul  5 11:22:10 1997
++++ unpv12e/server/pthread09.h	Wed Aug 22 10:20:53 2001
+@@ -6,3 +6,5 @@
+ 
+ int				listenfd, nthreads;
+ socklen_t		addrlen;
++
++#include "getrusage_children.h"

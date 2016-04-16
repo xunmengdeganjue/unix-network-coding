@@ -1,0 +1,17 @@
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/server/lock_pthread.c unpv12e/server/lock_pthread.c
+--- unpv12e.orig/server/lock_pthread.c	Sat Nov 16 10:51:56 1996
++++ unpv12e/server/lock_pthread.c	Fri Aug 17 17:08:41 2001
+@@ -17,7 +17,13 @@
+ 	Close(fd);
+ 
+ 	Pthread_mutexattr_init(&mattr);
++
++#ifdef	_POSIX_THREAD_PROCESS_SHARED
+ 	Pthread_mutexattr_setpshared(&mattr, PTHREAD_PROCESS_SHARED);
++#else
++	errno = ENOSYS;
++	err_sys("my_lock_init: pthread_mutexattr_setpshared not supported on this system");
++#endif
+ 	Pthread_mutex_init(mptr, &mattr);
+ }
+ /* end my_lock_init */

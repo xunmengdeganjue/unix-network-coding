@@ -1,3 +1,6 @@
+#ifndef  __CONFIG_H__
+#define  __CONFIG_H__
+
 /* config.h.  Generated automatically by configure.  */
 /* Define the following if you have the corresponding header */
 #define	CPU_VENDOR_OS "i386-pc-bsdi3.0"
@@ -78,3 +81,7 @@
 #define	UNIXDOMAIN 1		/* Unix domain sockets */
 #define	UNIXdomain 1		/* Unix domain sockets */
 #define	MCAST 1			/* multicasting support */
+
+
+#endif
+

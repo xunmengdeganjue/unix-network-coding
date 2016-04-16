@@ -6,29 +6,35 @@ TARGET=unix-network-coding
 
 #HOST_TOOL=mf_info_gen
 
-CFLAGS= -Wall -g
-#ifeq ("${PRODUCT_HARDWARE}", "rt4230w-d156")
-#CFLAGS+=-DCONFIG_RT4230W_D156
-#else
-#CFLAGS+=-DCONFIG_RT4230W_D187
-#endif
+CFLAGS= -Wall -g -I./include
+#LDFLAGS+=-L. -lm -liwinfo -luci -lcups
 
-SRCS=main.c
 
+CHAPTERLIB=chapter_1
+DIRS=$(CHAPTERLIB) lib  
+SRCS=$(foreach DIR, $(DIRS), $(wildcard $(DIR)/*.c))
 OBJS=$(patsubst %.c, %.o, $(SRCS))
+#OBJS+=cgi_main.o
 
 
-all: $(TARGET) $(HOST_TOOL) 
-
-$(TARGET): ${OBJS}
+all:lib $(OBJS)
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $(TARGET) $(OBJS)
 
-$(HOST_TOOL):
-	gcc $(CFLAGS) mf_info_gen.c -o $(HOST_TOOL)
-	cp -arpdf $(HOST_TOOL) $(TOPDIR)/tools/
+#build_bsahashtab: 
+#	gcc $(CFLAGS) -o hash/bsa_hashtab hash/bsa_hashtab.c
+#	./hash/bsa_hashtab ./hash/cgi_bsa_hash_tab.h
+
+lib: 
+	make -C lib
+
+
+#install:
+#	sudo cp net.cgi /usr/lib/cgi-bin/
+	#echo "cp -a $(TARGET) $(ROOTDIR)/web"
+	#@cp -a $(TARGET) $(ROOTDIR)/web
 
 clean: 
-	rm -rf ${TARGET} $(OBJS) *.bak mf_info_gen art_default_mf_info.bin
+	rm -rf $(TARGET) $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<

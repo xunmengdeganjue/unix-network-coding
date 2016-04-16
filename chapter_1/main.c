@@ -1,7 +1,9 @@
-#include <stdio.h>
-#include "unp.h"
 
-int main(){
+
+#include "new_unp.h"
+
+
+int main(int argc,char **argv){
 	int sockfd,n;
 	char recvline[MAXLINE + 1];
 	struct sockaddr_in servaddr;
@@ -21,13 +23,19 @@ int main(){
 
 	if(connect(sockfd,(SA *)&servaddr,sizeof(servaddr)) < 0)
 		err_sys("connect error");
+    
 	while((n = read(sockfd,recvline,MAXLINE)) > 0){
+     
 		recvline[n] = 0; /*null terminate*/
+        
 		if(fputs(recvline,stdout) == EOF)
 			err_sys("fputs error");
 	}
+    
 	if(n < 0){
+     
 		err_sys("read error");
+        
 	}
 
 	exit(0);

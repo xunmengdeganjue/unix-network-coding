@@ -1,0 +1,46 @@
+--- unpv12e.orig/lib/unp.h	Sun Sep 14 12:49:59 1997
++++ unpv12e/lib/unp.h	Fri Aug 17 16:09:43 2001
+@@ -110,11 +110,13 @@
+ #define	gethostbyname2(host,family)		gethostbyname((host))
+ #endif
+ 
++#ifndef HAVE_IN_PKTINFO_STRUCT
+ /* The structure returned by recvfrom_flags() */
+ struct in_pktinfo {
+   struct in_addr	ipi_addr;	/* dst IPv4 address */
+   int				ipi_ifindex;/* received interface index */
+ };
++#endif
+ /* $$.It in_pktinfo$$ */
+ /* $$.Ib ipi_addr$$ */
+ /* $$.Ib ipi_ifindex$$ */
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/config.h.in unpv12e/config.h.in
+--- unpv12e.orig/config.h.in	Thu Jul 10 08:19:32 1997
++++ unpv12e/config.h.in	Fri Aug 17 16:15:36 2001
+@@ -42,6 +42,7 @@
+ #undef	HAVE_IF_NAMEINDEX_STRUCT	/* <net/if.h> */
+ #undef	HAVE_SOCKADDR_DL_STRUCT	/* <net/if_dl.h> */
+ #undef	HAVE_TIMESPEC_STRUCT	/* <time.h> */
++#undef  HAVE_IN_PKTINFO_STRUCT	/* <netinet/in.h> */
+ 
+ /* Define the following if feature is provided. */
+ #undef	HAVE_SOCKADDR_SA_LEN	/* sockaddr{} has sa_len member */
+diff -Naur -x unp*.h -x *.lh -x configure unpv12e.orig/configure.in unpv12e/configure.in
+--- unpv12e.orig/configure.in	Thu Jul 10 08:19:08 1997
++++ unpv12e/configure.in	Fri Aug 17 16:08:12 2001
+@@ -263,6 +263,15 @@
+ 	AC_DEFINE(HAVE_TIMESPEC_STRUCT)
+ fi
+ 
++dnl
++AC_CACHE_CHECK(for in_pktinfo{}, ac_cv_have_in_pktinfo_struct,
++	AC_EGREP_HEADER(in_pktinfo, netinet/in.h,
++		ac_cv_have_in_pktinfo_struct=yes,
++		ac_cv_have_in_pktinfo_struct=no))
++if test $ac_cv_have_in_pktinfo_struct = yes ; then
++	AC_DEFINE(HAVE_IN_PKTINFO_STRUCT)
++fi
++
+ dnl ##################################################################
+ dnl Check for XTI devices.
+ dnl

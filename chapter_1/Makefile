@@ -1,7 +1,7 @@
 TARGET:=getTime
 
 CFLAGS:=-Wall -g -I../include
-LDFLAGS:=
+LDFLAGS:=-L../lib 
 
 SRCS:=main.c
 
