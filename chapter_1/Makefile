@@ -1,15 +1,17 @@
 TARGET:=getTime
 
-CFLAGS:=-Wall -g
-LDFLAGS:=-I../include
+CFLAGS:=-Wall -g -I../include
+LDFLAGS:=
 
 SRCS:=main.c
 
-OBJ:=${patsubst %.c, %.o, $(SRCS)}
+OBJS:=${patsubst %.c, %.o, $(SRCS)}
 
-${TARGET}:${OBJ}
-	$(CC) $(LDFLAGS) $(CFLAGS) -o $(TARGET) $(OBJS)
+${TARGET}:${OBJS}
+	$(CC)  $(LDFLAGS) $(CFLAGS) -o $(TARGET) $(OBJS)
 
+clean:
+	rm -rf $(OBJS) $(TARGET)
 
 
 

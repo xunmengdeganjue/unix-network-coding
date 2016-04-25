@@ -55,15 +55,15 @@
 /* #undef	int8_t */			/* <sys/types.h> */
 /* #undef	int16_t */			/* <sys/types.h> */
 /* #undef	int32_t */			/* <sys/types.h> */
-#define	uint8_t (unsigned char)			/* <sys/types.h> */
-#define	uint16_t (unsigned short)		/* <sys/types.h> */
-#define	uint32_t (unsigned int)		/* <sys/types.h> */
+#define	uint8_t unsigned char			/* <sys/types.h> */
+#define	uint16_t unsigned short		/* <sys/types.h> */
+#define	uint32_t unsigned int		/* <sys/types.h> */
 /* #undef	size_t */			/* <sys/types.h> */
 /* #undef	ssize_t */			/* <sys/types.h> */
 /* socklen_t should be typedef'd as uint32_t, but configure defines it
    to be an unsigned int, as it is needed early in the compile process,
    sometimes before some implementations define uint32_t. */
-#define	socklen_t (unsigned int)		/* <sys/socket.h> */
+#define	socklen_t unsigned int;		/* <sys/socket.h> */
 #define	sa_family_t SA_FAMILY_T		/* <sys/socket.h> */
 #define	SA_FAMILY_T uint8_t
 
