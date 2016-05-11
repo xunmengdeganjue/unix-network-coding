@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>                  /*for memset()*/
 #include <unistd.h>                 /*for read()*/
-#include	<errno.h>               /*for errno*/
+#include <errno.h>               /*for errno*/
 
 
 #include <sys/socket.h>	 /* basic socket definitions */
@@ -16,6 +16,7 @@
 #include <arpa/inet.h>           /*for inet_pton*/
 
 #define	MAXLINE		4096	/* max text line length */
+#define       LISTENQ         1024    /* 2nd argument to listen() */
 
 /* Following shortens all the type casts of pointer arguments */
 #define	SA	struct sockaddr
