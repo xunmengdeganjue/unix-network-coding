@@ -12,6 +12,7 @@ int main(int argc,char **argv){
 		err_quit("usage:a.out <IPaddress>");
 
 	if((sockfd = socket(AF_INET,SOCK_STREAM,0)) < 0)
+		//if((sockfd = socket(9999,SOCK_STREAM,0)) < 0)
 		err_sys("socket error");
 
 

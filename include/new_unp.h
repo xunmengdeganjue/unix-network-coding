@@ -16,7 +16,7 @@
 #include <arpa/inet.h>           /*for inet_pton*/
 
 #define	MAXLINE		4096	/* max text line length */
-#define       LISTENQ         1024    /* 2nd argument to listen() */
+#define LISTENQ     1024    /* 2nd argument to listen(),该宏表示系统内核允许在监听描述符上排队的最大客户连接数 */
 
 /* Following shortens all the type casts of pointer arguments */
 #define	SA	struct sockaddr
@@ -35,6 +35,11 @@ void	 err_sys(const char *, ...);
 #endif
 #endif
 
+/* prototypes for our socket wrapper functions: see {Sec errors} */
+int		 Accept(int, SA *, socklen_t *);
+void	 Bind(int, const SA *, socklen_t);
+void	 Connect(int, const SA *, socklen_t);
+void	 Close(int);
 
 
 
