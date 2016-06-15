@@ -18,8 +18,7 @@
 
 #include	"new_unp.h"
 
-void *
-Calloc(size_t n, size_t size)
+void * Calloc(size_t n, size_t size)
 {
 	void	*ptr;
 
@@ -28,22 +27,19 @@ Calloc(size_t n, size_t size)
 	return(ptr);
 }
 
-void
-Close(int fd)
+void Close(int fd)
 {
 	if (close(fd) == -1)
 		err_sys("close error");
 }
 
-void
-Dup2(int fd1, int fd2)
+void Dup2(int fd1, int fd2)
 {
 	if (dup2(fd1, fd2) == -1)
 		err_sys("dup2 error");
 }
 
-int
-Fcntl(int fd, int cmd, int arg)
+int Fcntl(int fd, int cmd, int arg)
 {
 	int	n;
 

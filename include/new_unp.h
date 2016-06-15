@@ -1,6 +1,3 @@
-
-
-
 #ifndef __NEW_UNP_H__
 #define __NEW_UNP_H__
 
@@ -35,12 +32,16 @@ void	 err_sys(const char *, ...);
 #endif
 #endif
 
+/* Define some port number that can be used for client-servers */
+#define	SERV_PORT		 9877			/* TCP and UDP client-servers */
+
+
 /* prototypes for our socket wrapper functions: see {Sec errors} */
 int		 Accept(int, SA *, socklen_t *);
 void	 Bind(int, const SA *, socklen_t);
 void	 Connect(int, const SA *, socklen_t);
 void	 Close(int);
-
+void	 Writen(int, void *, size_t);
 
 
 #endif
