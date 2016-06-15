@@ -402,7 +402,7 @@ char	*Fgets(char *, int, FILE *);
 FILE	*Fopen(const char *, const char *);
 void	 Fputs(const char *, FILE *);
 
-			/* prototypes for our socket wrapper functions: see {Sec errors} */
+/* prototypes for our socket wrapper functions: see {Sec errors} */
 int		 Accept(int, SA *, socklen_t *);
 void	 Bind(int, const SA *, socklen_t);
 void	 Connect(int, const SA *, socklen_t);

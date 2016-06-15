@@ -36,13 +36,26 @@ void	 err_sys(const char *, ...);
 #define	SERV_PORT		 9877			/* TCP and UDP client-servers */
 
 
-/* prototypes for our socket wrapper functions: see {Sec errors} */
+/* prototypes for our socket wrapper functions: see {Sec errors} ,the definition is in wrapsock.c*/
 int		 Accept(int, SA *, socklen_t *);
 void	 Bind(int, const SA *, socklen_t);
 void	 Connect(int, const SA *, socklen_t);
 void	 Close(int);
+
 void	 Writen(int, void *, size_t);
 
+/* prototypes for our stdio wrapper functions: see {Sec errors} ,the definition is in wrapstdio.c*/
+void	 Fclose(FILE *);
+FILE	*Fdopen(int, const char *);
+char	*Fgets(char *, int, FILE *);
+FILE	*Fopen(const char *, const char *);
+void	 Fputs(const char *, FILE *);
+
+
+/* prototypes for our own library wrapper functions,the definition is in wraplib.c*/
+const char		*Inet_ntop(int, const void *, char *, size_t);
+void			 Inet_pton(int, const char *, void *);
+ssize_t	 readline(int, void *, size_t);
 
 #endif
 

@@ -120,8 +120,7 @@ Recv(int fd, void *ptr, size_t nbytes, int flags)
 	return(n);
 }
 
-ssize_t
-Recvfrom(int fd, void *ptr, size_t nbytes, int flags,
+ssize_t Recvfrom(int fd, void *ptr, size_t nbytes, int flags,
 		 struct sockaddr *sa, socklen_t *salenptr)
 {
 	ssize_t		n;
@@ -131,8 +130,7 @@ Recvfrom(int fd, void *ptr, size_t nbytes, int flags,
 	return(n);
 }
 
-ssize_t
-Recvmsg(int fd, struct msghdr *msg, int flags)
+ssize_t Recvmsg(int fd, struct msghdr *msg, int flags)
 {
 	ssize_t		n;
 
@@ -141,8 +139,7 @@ Recvmsg(int fd, struct msghdr *msg, int flags)
 	return(n);
 }
 
-int
-Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+int Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
        struct timeval *timeout)
 {
 	int		n;
@@ -152,23 +149,20 @@ Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	return(n);		/* can return 0 on timeout */
 }
 
-void
-Send(int fd, const void *ptr, size_t nbytes, int flags)
+void Send(int fd, const void *ptr, size_t nbytes, int flags)
 {
 	if (send(fd, ptr, nbytes, flags) != nbytes)
 		err_sys("send error");
 }
 
-void
-Sendto(int fd, const void *ptr, size_t nbytes, int flags,
+void Sendto(int fd, const void *ptr, size_t nbytes, int flags,
 	   const struct sockaddr *sa, socklen_t salen)
 {
 	if (sendto(fd, ptr, nbytes, flags, sa, salen) != nbytes)
 		err_sys("sendto error");
 }
 
-void
-Sendmsg(int fd, const struct msghdr *msg, int flags)
+void Sendmsg(int fd, const struct msghdr *msg, int flags)
 {
 	int			i;
 	ssize_t		nbytes;
@@ -181,22 +175,19 @@ Sendmsg(int fd, const struct msghdr *msg, int flags)
 		err_sys("sendmsg error");
 }
 
-void
-Setsockopt(int fd, int level, int optname, const void *optval, socklen_t optlen)
+void Setsockopt(int fd, int level, int optname, const void *optval, socklen_t optlen)
 {
 	if (setsockopt(fd, level, optname, optval, optlen) < 0)
 		err_sys("setsockopt error");
 }
 
-void
-Shutdown(int fd, int how)
+void Shutdown(int fd, int how)
 {
 	if (shutdown(fd, how) < 0)
 		err_sys("shutdown error");
 }
 
-int
-Sockatmark(int fd)
+int Sockatmark(int fd)
 {
 	int		n;
 
@@ -206,8 +197,7 @@ Sockatmark(int fd)
 }
 
 /* include Socket */
-int
-Socket(int family, int type, int protocol)
+int Socket(int family, int type, int protocol)
 {
 	int		n;
 
@@ -217,8 +207,7 @@ Socket(int family, int type, int protocol)
 }
 /* end Socket */
 
-void
-Socketpair(int family, int type, int protocol, int *fd)
+void Socketpair(int family, int type, int protocol, int *fd)
 {
 	int		n;
 

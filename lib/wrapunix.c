@@ -222,8 +222,7 @@ Unlink(const char *pathname)
 		err_sys("unlink error for %s", pathname);
 }
 
-pid_t
-Wait(int *iptr)
+pid_t Wait(int *iptr)
 {
 	pid_t	pid;
 
@@ -232,8 +231,7 @@ Wait(int *iptr)
 	return(pid);
 }
 
-pid_t
-Waitpid(pid_t pid, int *iptr, int options)
+pid_t Waitpid(pid_t pid, int *iptr, int options)
 {
 	pid_t	retpid;
 
@@ -242,8 +240,7 @@ Waitpid(pid_t pid, int *iptr, int options)
 	return(retpid);
 }
 
-void
-Write(int fd, void *ptr, size_t nbytes)
+void Write(int fd, void *ptr, size_t nbytes)
 {
 	if (write(fd, ptr, nbytes) != nbytes)
 		err_sys("write error");
