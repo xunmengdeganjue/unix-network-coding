@@ -6,6 +6,17 @@
 ├── chapter_1               //第一章
 │   ├── main.c
 │   └── Makefile
+
+├── chapter_3
+│   └── endian.c
+
+├── chapter_5
+│   ├── build_client.sh   //编译回显客户端脚本
+│   ├── build_server.sh   //编译回显服务器端脚本
+│   ├── client            //客户端，使用方法：./client SERVER-IP
+│   ├── client.c          //回显实验客户端
+│   ├── server            //服务器端，./server &
+│   └── server.c          //回显服务器
 ...
 .......
 ...
