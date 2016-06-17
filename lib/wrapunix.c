@@ -86,17 +86,16 @@ Malloc(size_t size)
 	return(ptr);
 }
 
-void
-Mktemp(char *template)
+void Mktemp(char *template)
 {
-	if (mktemp(template) == NULL || template[0] == 0)
-		err_quit("mktemp error");
+	/*change the mktemp to mkstemp to be more securety,and the compared parameter is from NULL the the -1.*/	
+	if (mkstemp(template) == -1 || template[0] == 0)
+		err_quit("mkstemp error");
 }
 
 #include	<sys/mman.h>
 
-void *
-Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
+void *Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
 	void	*ptr;
 
@@ -105,8 +104,7 @@ Mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 	return(ptr);
 }
 
-int
-Open(const char *pathname, int oflag, mode_t mode)
+int Open(const char *pathname, int oflag, mode_t mode)
 {
 	int		fd;
 
@@ -115,15 +113,13 @@ Open(const char *pathname, int oflag, mode_t mode)
 	return(fd);
 }
 
-void
-Pipe(int *fds)
+void Pipe(int *fds)
 {
 	if (pipe(fds) < 0)
 		err_sys("pipe error");
 }
 
-ssize_t
-Read(int fd, void *ptr, size_t nbytes)
+ssize_t Read(int fd, void *ptr, size_t nbytes)
 {
 	ssize_t		n;
 
@@ -132,36 +128,31 @@ Read(int fd, void *ptr, size_t nbytes)
 	return(n);
 }
 
-void
-Sigaddset(sigset_t *set, int signo)
+void Sigaddset(sigset_t *set, int signo)
 {
 	if (sigaddset(set, signo) == -1)
 		err_sys("sigaddset error");
 }
 
-void
-Sigdelset(sigset_t *set, int signo)
+void Sigdelset(sigset_t *set, int signo)
 {
 	if (sigdelset(set, signo) == -1)
 		err_sys("sigdelset error");
 }
 
-void
-Sigemptyset(sigset_t *set)
+void Sigemptyset(sigset_t *set)
 {
 	if (sigemptyset(set) == -1)
 		err_sys("sigemptyset error");
 }
 
-void
-Sigfillset(sigset_t *set)
+void Sigfillset(sigset_t *set)
 {
 	if (sigfillset(set) == -1)
 		err_sys("sigfillset error");
 }
 
-int
-Sigismember(const sigset_t *set, int signo)
+int Sigismember(const sigset_t *set, int signo)
 {
 	int		n;
 
@@ -170,22 +161,19 @@ Sigismember(const sigset_t *set, int signo)
 	return(n);
 }
 
-void
-Sigpending(sigset_t *set)
+void Sigpending(sigset_t *set)
 {
 	if (sigpending(set) == -1)
 		err_sys("sigpending error");
 }
 
-void
-Sigprocmask(int how, const sigset_t *set, sigset_t *oset)
+void Sigprocmask(int how, const sigset_t *set, sigset_t *oset)
 {
 	if (sigprocmask(how, set, oset) == -1)
 		err_sys("sigprocmask error");
 }
 
-char *
-Strdup(const char *str)
+char *Strdup(const char *str)
 {
 	char	*ptr;
 
@@ -194,8 +182,7 @@ Strdup(const char *str)
 	return(ptr);
 }
 
-long
-Sysconf(int name)
+long Sysconf(int name)
 {
 	long	val;
 
