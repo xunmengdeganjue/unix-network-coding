@@ -11,6 +11,8 @@
 │   └── endian.c
 
 ├── chapter_5
+|.. ├── Basic_server_client //原始版回显服务器不含信号处理等机制
+
 │   ├── build_client.sh   //编译回显客户端脚本
 │   ├── build_server.sh   //编译回显服务器端脚本
 │   ├── client            //客户端，使用方法：./client SERVER-IP
@@ -24,7 +26,14 @@
 │   ├── config.h
 │   └── unp.h
 ├── lib
-│   └── addrinfo.h
+│   └── error.c
+│   └── readline.c
+│   └── signal.c
+│   └── wraplib.c
+│   └── wrapsock.c
+│   └── wrapstdio.c
+│   └── wrapunix.c
+│   └── writen.c
 └── Makefile
 
 
