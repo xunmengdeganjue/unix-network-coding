@@ -7,10 +7,14 @@
 #include <unistd.h>                 /*for read()*/
 #include <errno.h>               /*for errno*/
 
-
 #include <sys/socket.h>	 /* basic socket definitions */
 #include <netinet/in.h>	         /* sockaddr_in{} and other Internet defns */
 #include <arpa/inet.h>           /*for inet_pton*/
+
+#include	<signal.h>
+#include	<sys/stat.h>	/* for S_xxx file mode constants */
+#include	<sys/wait.h>
+
 
 #define	MAXLINE		4096	/* max text line length */
 #define LISTENQ     1024    /* 2nd argument to listen(),该宏表示系统内核允许在监听描述符上排队的最大客户连接数 */
@@ -52,10 +56,15 @@ FILE	*Fopen(const char *, const char *);
 void	 Fputs(const char *, FILE *);
 
 
+
 /* prototypes for our own library wrapper functions,the definition is in wraplib.c*/
 const char		*Inet_ntop(int, const void *, char *, size_t);
 void			 Inet_pton(int, const char *, void *);
 ssize_t	 readline(int, void *, size_t);
+
+typedef	void	Sigfunc(int);	/* for signal handlers */
+Sigfunc *Signal(int, Sigfunc *);
+Sigfunc *Signal_intr(int, Sigfunc *);
 
 #endif
 
