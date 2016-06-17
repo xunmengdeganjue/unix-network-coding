@@ -24,7 +24,14 @@
 │   ├── config.h
 │   └── unp.h
 ├── lib
-│   └── addrinfo.h
+│   └── error.c
+│   └── readline.c
+│   └── signal.c
+│   └── wraplib.c
+│   └── wrapsock.c
+│   └── wrapstdio.c
+│   └── wrapunix.c
+│   └── writen.c
 └── Makefile
 
 
