@@ -12,6 +12,40 @@ again:
 		err_sys("str_echo:read error");
 }
 
+/*
+*    Function Name    : str_calc
+*    Create Date      : 2016.06.20
+*    Author           : 
+*    Description      : do the calculation of the data from the client.
+*    Param  Input     : sockfd.				
+*    Return Code  1   : void
+*    revised History  :
+*/
+void str_calc(int sockfd){
+	long arg1,arg2;
+	ssize_t n;
+	char line[MAXLINE];
+	
+	for(;;){
+		if((n =Readline(sockfd,line,MAXLINE)) == 0)
+			return;	/*connection closed by other end */
+		if(sscanf(line, "%ld%ld",&arg1,&arg2) == 2)
+			snprintf(line,sizeof(line),"%ld\n",arg1+arg2);
+		else
+			snprintf(line,sizeof(line),"input error\n");
+		n = strlen(line);
+		Writen(sockfd,line,n);
+	}
+}
+/*
+*    Function Name    : sig_chld
+*    Create Date      : 2016.06.15
+*    Author           : 
+*    Description      : just write data which from the client back to the client.
+*    Param  Input     : sockfd.				
+*    Return Code  1   : void
+*    revised History  :
+*/
 void sig_chld(int signo){
 	pid_t pid;
 	int stat;
@@ -51,7 +85,8 @@ int main(int argc,char **argv){
 		
 		if((childpid = Fork()) == 0){ /*child process*/
 			Close(listenfd);		/*close listening socket*/	
-			str_echo(connfd);		/*process the request*/
+			//str_echo(connfd);		/*process the request*/
+			str_calc(connfd);
 			exit(0);
 		}
 		Close(connfd);				/*parent closes connectd socket*/

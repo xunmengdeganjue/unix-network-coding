@@ -1,1 +1,1 @@
-gcc  -o server server.c ../lib/error.c ../lib/wrapsock.c ../lib/writen.c ../lib/wrapunix.c ../lib/signal.c -I../include 
+gcc  -o server server.c ../lib/error.c ../lib/wrapsock.c ../lib/writen.c ../lib/wrapunix.c ../lib/signal.c  ../lib/readline.c -I../include 
