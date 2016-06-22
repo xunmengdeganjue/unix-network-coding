@@ -34,16 +34,30 @@ void str_cli_twice(FILE *fp, int sockfd){
 	}
 	
 }
+
+/*
+*    Function Name    : str_cli_select
+*    Create Date      : 2016.06.22
+*    Author           : 
+*    Description      : This function used the select() function to show the I/O
+		multiplexing function of the unix network.
+*    Param  Input     :			
+*    Return Code  1   : void
+*    revised History  :
+*/
 void str_cli_select( FILE *fp, int sockfd){
+
 	int maxfdpl;
-	fd_set rset;
+	fd_set rset; /* Declare a descriptor set used to check the readability */
 	char sendline[MAXLINE], recvline[MAXLINE];
 	
 	FD_ZERO(&rset);
+	
 	for(;;){
 			FD_SET(fileno(fp), &rset);
 			FD_SET(sockfd, &rset);
 			maxfdpl = max(fileno(fp), sockfd) +1;
+			
 			Select(maxfdpl, &rset, NULL, NULL, NULL);
 			
 			if(FD_ISSET(sockfd, &rset)){ /*socket is readable*/
@@ -56,7 +70,6 @@ void str_cli_select( FILE *fp, int sockfd){
 					return ; 	/*all done*/
 				Writen(sockfd,sendline,strlen(sendline));			
 			}
-		
 	}
 }
 
