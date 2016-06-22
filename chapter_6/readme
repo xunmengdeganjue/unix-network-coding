@@ -9,4 +9,13 @@ view the detail information of the tcpserver and tcpclient.
 maybe you will change the pts/number to your real situation.
 you can use command '$ps -t' show your real pts number.
 
- 
+2016-06-22
+6.4:
+优化客户端程序client.c，使用select重写str_cli并将函数命名为str_cli_select。
+特点：
+服务器端进程一旦终止，客户端立即能得到通知。
+第五章中的程序客户端存在的问题在于：当套接字上发生了某些事情时，客户端有可能
+会阻塞于fgets调用。而本版本改为阻塞于select调用，或是等待标准输入可读，或者是
+等待套接字可读。
+
+
