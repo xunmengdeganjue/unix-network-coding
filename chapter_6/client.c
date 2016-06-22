@@ -72,6 +72,54 @@ void str_cli_select( FILE *fp, int sockfd){
 			}
 	}
 }
+/*
+*    Function Name    : str_cli_select_shutdown
+*    Create Date      : 2016.06.22
+*    Author           : 
+*    Description      : This function used the select() function to show the I/O
+		multiplexing function of the unix network.
+*    Param  Input     :			
+*    Return Code  1   : void
+*    revised History  :
+*/
+void str_cli_select_shutdown(FILE *fp, int sockfd){
+	
+	int maxfdpl,stdineof;
+	fd_set rset;
+	char buf[MAXLINE];
+	int n;
+	
+	stdineof = 0;
+	FD_ZERO(&rset);
+	for(;;){
+		if(stdineof == 0)
+			FD_SET(fileno(fp), &rset);
+		FD_SET(sockfd, &rset);
+		maxfdpl = max(fileno(fp),sockfd) +1;
+		
+		Select(maxfdpl, &rset, NULL, NULL, NULL);
+		
+		if(FD_ISSET(sockfd, &rset)){/*socket is readable*/
+			if((n = Read(sockfd, buf, MAXLINE)) == 0){
+				if(stdineof == 1){
+					return ; /*normal termination*/
+				}else{
+					err_quit("str_cli_select_shutdown:server terminated prematurely");
+				}
+			}
+			Write(fileno(stdout), buf, n);
+		}
+		if(FD_ISSET(fileno(fp), &rset)){
+			if((n = Read(fileno(fp), buf, MAXLINE)) == 0){
+				stdineof = 1;
+				Shutdown(sockfd,SHUT_WR); /*send FIN*/
+				FD_CLR(fileno(fp), &rset);
+				continue;
+			}
+			Writen(sockfd, buf, n);
+		}
+	}	
+}
 
 int main(int argc, char *argv[]){
 	int sockfd;
@@ -89,7 +137,9 @@ int main(int argc, char *argv[]){
 	/*create the connection with the server.*/
 	Connect(sockfd, (SA *)&servaddr, sizeof(servaddr));
 	
-	str_cli_select(stdin,sockfd);
+	//str_cli(stdin,sockfd);
+	//str_cli_select(stdin,sockfd);
+	str_cli_select_shutdown(stdin,sockfd);
 	
 	exit(0);
 }

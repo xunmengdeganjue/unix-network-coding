@@ -56,8 +56,10 @@ void sig_chld(int signo){
 }
 
 int main(int argc,char **argv){
-	int listenfd,connfd;
-	pid_t childpid;
+	int listenfd,connfd,i,maxi,maxfd,sockfd;
+	int nready,client[FD_SETSIZE];
+	fd_set rset, allset;
+	char buf[MAXLINE];
 	socklen_t clilen;
 	struct sockaddr_in cliaddr,servaddr;
 	
@@ -72,23 +74,51 @@ int main(int argc,char **argv){
 	
 	Listen(listenfd, LISTENQ);
 	
-	Signal(SIGCHLD, sig_chld); /*must call waitpid()*/
+	maxfd = listenfd; /*initialize*/
+	maxi = -1;			/*index into clident[] array*/
+	//Signal(SIGCHLD, sig_chld); /*must call waitpid()*/
+	for(i = 0; i < FD_SETSIZE; i++)
+		client[i] = -1;	/*-1 indicates available entry*/
+	FD_ZERO(&allset);
+	FD_SET(listenfd, &allset);
 	
 	for(;;){
-		clilen = sizeof(cliaddr);
-		if((connfd = accept(listenfd, (SA *) &(cliaddr),&clilen)) < 0){
-			if( errno == EINTR)
+		rset = allset;	/* structure assignment */
+		nready = Select(maxfd+1, &rset, NULL, NULL, NULL);
+		if(FD_ISSET(listendfd, &rset)){	/*new client connection*/
+			clilen = sizeof(cliaddr);
+			connfd = Accept(listenfd, (SA *)&cliaddr, &clilen);
+			
+			for(i = 0; i < FD_SETSIZE; i++){
+				if(client[i] < 0){
+					client[i] = connfd;	/*save descriptor*/
+					break;
+				}
+			}	
+			if ( i == FD_SETSIZE )
+				err_quit("too many clients");
+			FD_SET(connfd, &allset); /*add new descriptor to set*/
+			if(connfd > maxfd)
+				maxfd = connfd;	/*for select*/
+			if(i > maxi)
+				maxi = i;		/*max index in client[] array */
+			if(--nready <= 0)
+				continue; 		/*no more readable descriptors*/
+		}
+		for(i = 0; i <= maxi; i++){/*check all clients for data*/
+			if ((sockfd = client[i] )< 0))
 				continue;
-			else
-				err_sys("accept error!");
+			if(FD_ISSET(sockfd, &rset)){
+				if((n = Read(sockfd, buf, MAXLINE)) == 0){
+					/*connection closed by client*/
+					Close(sockfd);
+					FD_CLR(sockfd, &allset);
+					client[i] 
+				}
+				
+			}
 		}
 		
-		if((childpid = Fork()) == 0){ /*child process*/
-			Close(listenfd);		/*close listening socket*/	
-			str_echo(connfd);		/*process the request*/
-			//str_calc(connfd);
-			exit(0);
-		}
 		Close(connfd);				/*parent closes connectd socket*/
 		
 	}
