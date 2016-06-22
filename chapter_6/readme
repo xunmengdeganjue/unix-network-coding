@@ -1,0 +1,12 @@
+Description: This foldre contained the test code of sixth chapter of 《Unix Network Programming》volum 1.
+
+Some command to test the experiment.
+(1)netstat 
+	$netstat -a
+(2)ps
+	$ps -t pts/14 -o pid,ppid,tty,stat,args,wchan
+view the detail information of the tcpserver and tcpclient.
+maybe you will change the pts/number to your real situation.
+you can use command '$ps -t' show your real pts number.
+
+ 
