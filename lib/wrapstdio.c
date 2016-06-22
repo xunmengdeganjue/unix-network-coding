@@ -22,8 +22,7 @@ Fdopen(int fd, const char *type)
 	return(fp);
 }
 
-char *
-Fgets(char *ptr, int n, FILE *stream)
+char *Fgets(char *ptr, int n, FILE *stream)
 {
 	char	*rptr;
 
