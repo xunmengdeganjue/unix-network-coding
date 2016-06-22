@@ -66,6 +66,10 @@ typedef	void	Sigfunc(int);	/* for signal handlers */
 Sigfunc *Signal(int, Sigfunc *);
 Sigfunc *Signal_intr(int, Sigfunc *);
 
+#define	min(a,b)	((a) < (b) ? (a) : (b))
+#define	max(a,b)	((a) > (b) ? (a) : (b))
+
+
 #endif
 
 
