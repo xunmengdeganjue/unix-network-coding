@@ -58,6 +58,7 @@ void sig_chld(int signo){
 int main(int argc,char **argv){
 	int listenfd,connfd,i,maxi,maxfd,sockfd;
 	int nready,client[FD_SETSIZE];
+	ssize_t n;
 	fd_set rset, allset;
 	char buf[MAXLINE];
 	socklen_t clilen;
@@ -85,7 +86,7 @@ int main(int argc,char **argv){
 	for(;;){
 		rset = allset;	/* structure assignment */
 		nready = Select(maxfd+1, &rset, NULL, NULL, NULL);
-		if(FD_ISSET(listendfd, &rset)){	/*new client connection*/
+		if(FD_ISSET(listenfd, &rset)){	/*new client connection*/
 			clilen = sizeof(cliaddr);
 			connfd = Accept(listenfd, (SA *)&cliaddr, &clilen);
 			
@@ -106,20 +107,22 @@ int main(int argc,char **argv){
 				continue; 		/*no more readable descriptors*/
 		}
 		for(i = 0; i <= maxi; i++){/*check all clients for data*/
-			if ((sockfd = client[i] )< 0))
+			if ((sockfd = client[i] ) < 0)
 				continue;
 			if(FD_ISSET(sockfd, &rset)){
 				if((n = Read(sockfd, buf, MAXLINE)) == 0){
 					/*connection closed by client*/
 					Close(sockfd);
 					FD_CLR(sockfd, &allset);
-					client[i] 
-				}
+					client[i] = -1;
+				}else
+					Writen(sockfd, buf, n);
+				
+				if(--nready <= 0)
+					break;	/*no more readable descriptors*/
 			}
-		}
-		
-		Close(connfd);				/*parent closes connectd socket*/
-		
+		}	
+		//Close(connfd);				/*parent closes connectd socket*	
 	}
 }
 
