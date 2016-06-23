@@ -18,6 +18,10 @@ you can use command '$ps -t' show your real pts number.
 会阻塞于fgets调用。而本版本改为阻塞于select调用，或是等待标准输入可读，或者是
 等待套接字可读。
 好处：增强代码健壮性。
+6.8：
+使用select来编写能够处理任意用户连接的单进程服务器端程序。减小服务器对每个客户端都启动一个进程的开销。
+
+
 
 
 
