@@ -115,7 +115,6 @@ int main(int argc,char **argv){
 					FD_CLR(sockfd, &allset);
 					client[i] 
 				}
-				
 			}
 		}
 		
