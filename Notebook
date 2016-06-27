@@ -1,6 +1,11 @@
 
 
 
+7.
+	fcntl函数是把套接字设置为费阻塞式I/O型或信号驱动式I/O型以及设置套接字属主的POSIX的方法。
+	获取对端引用进程已经读取完我们的数据的另一个方法是使用应用级确认（application-level-acknowledge）简称应用ACK。
+
+
 
 
 
