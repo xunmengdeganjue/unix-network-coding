@@ -52,8 +52,7 @@ static const char *inet_ntop6(const u_char *src, char *dst, size_t size);
  * author:
  *	Paul Vixie, 1996.
  */
-const char *
-inet_ntop(af, src, dst, size)
+const char *inet_ntop(af, src, dst, size)
 	int af;
 	const void *src;
 	char *dst;

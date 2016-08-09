@@ -106,6 +106,7 @@ int main(int argc,char **argv){
 			if(--nready <= 0)
 				continue; 		/*no more readable descriptors*/
 		}
+		/*get data from all clients*/
 		for(i = 0; i <= maxi; i++){/*check all clients for data*/
 			if ((sockfd = client[i] ) < 0)
 				continue;
